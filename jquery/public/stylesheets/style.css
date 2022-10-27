@@ -1,0 +1,51 @@
+body {
+  padding: 10px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #d32130;
+}
+.h{
+  background-color:#DFF6FF;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: -40px;
+  border-style: outset outset none outset;
+  border-radius: 6px;
+}
+.card-header{
+ background-color: #47B5FF;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: -40px;
+
+  border-radius: 6px;
+}
+  
+.b {
+  background-color:#DFF6FF;
+  border-radius: 6px;
+
+
+}
+.body {
+  background-color:#06283D;
+
+}
+.b { 
+  border-style: outset;
+  border-radius: 6px;
+}
+.c {
+  border-style: outset;
+  padding: 0px;
+  border-radius: 5px;
+}
+.form {
+  margin-bottom: 13px;
+}
+.th {
+  background-color: black;
+  border-block-start-color: black;
+}

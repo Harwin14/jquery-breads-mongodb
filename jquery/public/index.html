@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <link href="../stylesheets/style.css" rel="stylesheet">
+  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+  <link href="/fontawesome/css/all.css" rel="stylesheet">
+  <script src="/jquery-3.6.1.min.js"></script>
+  <title>jquery</title>
+</head>
+
+<body class="body">
+  <div class="container sm ">
+    <div class="card h">
+      <div class="h " style="height: 100px;">
+
+        <div class=" text-center ">
+          <h1>
+            BREADS JQUERY
+          </h1>
+
+          <h2>
+            (Browse, Read, Edit, Add, Delete, Sort)
+          </h2>
+        </div>
+      </div>
+
+      <div class="card-body b">
+        <table class="table table-striped">
+          <tr class="c">
+            <th class="c">
+              <div class="card-header text-center c">
+                <h2>ADD / EDIT Data</h2>
+              </div>
+
+              <div class="card-body c ">
+                <div>
+                  <form onsubmit="return saveData(event)" class="form">
+
+                    <div class="row mb-3">
+                      <label for="string" class="col-sm-2 col-form-check-label ">String</label>
+                      <div class="col-sm-10">
+                        <input type="text" id="string" class="form-control" name="string" placeholder="String">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+
+                      <label for="integer" class="col-sm-2 col-form-check-label ">Integer</label>
+                      <div class="col-sm-10">
+                        <input type="number" id="integer" class="form-control" name="integer" placeholder="Integer">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+                      <label for="float" class="col-sm-2 col-form-check-label ">Float</label>
+                      <div class="col-sm-10">
+                        <input type="number" id="float" class="form-control" name="float" placeholder="Float"
+                          step="0.005">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+                      <label for="date" class="col-sm-2 col-form-check-label ">Date</label>
+                      <div class="col-sm-4">
+                        <input type="date" id="date" class="form-control" name="date" placeholder="Date" value='date'
+                          required>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+                      <label for="boolean" class="col-sm-2 col-form-check-label ">boolean</label>
+                      <div class="col-sm-10">
+                        <select id="boolean" name="boolean" class="form-select" required>
+                          <option value=" " disabled selected>Choose boolean...</option>
+                          <option value=True>True</option>
+                          <option value=False>False</option>
+                        </select>
+                      </div>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+
+                </div>
+                <div class="card-footer ">
+                  <button type="submit" class="btn btn-primary fa-solid fa-file-arrow-down" title="SAVE DATA">
+                    Save</button>
+                </div>
+                <br>
+                </form>
+              </div>
+            </th>
+
+            <th>
+              <div class="card-header text-center c">
+                <h2>
+                  SEARCH
+                </h2>
+              </div>
+              <div class="card-body c">
+                <form id="form-search">
+                  <div class="row mb-3">
+                    <label for="searchString" class="col-sm-2 col-form-check-label ">String</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="searchString" name="searchString"
+                        placeholder="String">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+
+
+                    <label for="searchInteger" class="col-sm-2 col-form-check-label ">Integer</label>
+                    <div class="col-sm-10">
+                      <input type="number" class="form-control" id="searchInteger" name="searchInteger"
+                        placeholder="Integer">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+
+                    <label for="searchFloat" class="col-sm-2 col-form-check-label ">Float</label>
+                    <div class="col-sm-10">
+                      <input type="number" class="form-control" id="searchFloat" name="searchFloat" placeholder="Float"
+                        step="0.005">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+
+                    <label for="searchDate" class="col-sm-2 col-form-check-label " id="searchDate">Date</label>
+                    <div class="col-sm-4">
+                      <input type="date" class="form-control" id="searchStartDate" name="searchStartDate"
+                        placeholder="Date">
+                      <label class=" col-form-label">to</label>
+                      <input type="date" class="form-control" id="searchEndDate" name="searchEndDate"
+                        placeholder="Date">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+
+                    <label for="searchBoolean" class="col-sm-2 col-form-check-label ">boolean</label>
+                    <div class="col-sm-10">
+                      <select id="searchBoolean" name="searchBoolean" class="form-select">
+                        <option value="" selected> Choose Boolean ... </option>
+                        <option value=True>True</option>
+                        <option value=False>False</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="d-grid gap-2 d-md-block card-footer">
+                    <button class="btn btn-primary " type="submit"><i class="fa-solid fa-magnifying-glass"
+                        title="Search"> Search</i></button>
+                    <button class="btn btn-warning" type="submit" onclick="readData()"><i
+                        class="fa-sharp fa-solid fa-rotate-left" title="Reset"> Reset </i></button>
+                  </div>
+
+                  <br>
+                </form>
+              </div>
+            </th>
+
+          </tr>
+        </table>
+        <div class="card-header text-center ">
+          <h3><strong>RESULT</strong></h3>
+        </div>
+        <table class="table table-sortable   table-striped card-body ">
+          <thead class="thead">
+            <tr>
+              <th>No</th>
+              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>String</th>
+              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Integer</th>
+              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Float</th>
+              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Date</th>
+              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Boolean</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="body-users">
+          </tbody>
+        </table>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-md-10">
+              <nav aria-label="Page navigation example" id="pagination">
+              </nav>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function () {
+        readData()
+
+        $("#form-search").submit(function (event) {
+          event.preventDefault()
+          saveData
+        })
+      })
+
+
+
+
+
+
+
+
+      let idEdit = null;
+      let params = {
+        display: 5,
+        page: 1
+      }
+      //let link = new URLSearchParams(params).toString()
+      const readData = () => {
+        $.ajax({
+          method: "GET",
+          url: "http://localhost:3000/users?",
+        }).done(function (response) {
+          params = { ...params, totalPages: response.totalPages }
+          let html = ''
+          let offset = (parseInt(params.page) - 1) * params.display
+
+
+
+          response.data.forEach((item, index) => {
+            html += `
+                        <tr>
+                            <td>${index + 1 + offset}</td>
+                            <td>${item.string}</td>
+                            <td>${item.integer}</td>
+                            <td>${item.float}</td>
+                            <td>${moment(item.date).format('DD/MMM/YYYY')}</td>
+                            <td>${item.boolean}</td>
+                            <td>
+                                <div class="d-grid gap-2 d-md-block">
+                                    <a class="btn btn-success"><i
+                                            class="fa-solid fa-pencil" title="Edit" onclick='editData(${JSON.stringify(item)})''></i></a>
+                                    <a class="btn btn-danger" onclick="removeData('${item._id}') "
+                                        onclick="return confirm('Are you sure you want to delete?');"> <i
+                                            class="fa-solid fa-trash-can" title="Delete" ></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        `
+          })
+          $('#body-users').html(html)
+          pagination()
+        }).fail(function (err) {
+          alert('error bruh')
+
+
+        })
+      }
+      // console.log(params)
+
+
+      const saveData = (e) => {
+        e.preventDefault()
+        const string = $('#string').val()
+        const integer = $('#integer').val()
+        const float = $('#float').val()
+        const date = $('#date').val()
+        const boolean = $('#boolean').val()
+        console.log(string, integer, float, date, boolean)
+
+
+        $.ajax({
+          method: "POST ",
+          url: "http://localhost:3000/users?",
+        }).done(function (data) {
+          readData()
+        }).fail(function (err) {
+          alert('nambah gagal')
+        })
+
+        $('#string').val("")
+        $('#integer').val("")
+        $('#float').val("")
+        $('#date').val("")
+        $('#boolean').val("")
+
+
+
+
+
+
+
+
+
+
+      }
+      const removeData = (id) => {
+        fetch(`http://localhost:3000/users/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+        }).then((response) => response.json()).then((data) => {
+          readData()
+        })
+      }
+
+      const editData = (breads) => {
+
+        idEdit = breads._id
+        document.getElementById('string').value = breads.string
+        document.getElementById('integer').value = breads.integer
+        document.getElementById('float').value = breads.float
+        document.getElementById('date').value = moment(breads.date).format("YYYY-MM-DD")
+        document.getElementById('boolean').value = breads.booolean
+        const boolean = document.getElementById('boolean').value = breads.booolean
+
+      }
+
+
+      const pagination = () => {
+        let pagination = `<ul class="pagination">
+                <li class="page-item${params.page == 1 ? ' disabled' : ''}">
+                  <a class="page-link" id="halaman" href="javascripts:void(0)" onclick="changePage(${parseInt(params.page) - 1})" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>`
+        for (let i = 1; i <= params.totalPages; i++) {
+          pagination += ` 
+        <li class="page-item${i == params.page ? ' active' : ''}"><a class="page-link" id="halaman" href="javascript:void(0)" id="angka" onclick="changePage(${i})">${i}</a></li>`
+        }
+        pagination += `<li class="page-item${params.page == params.totalPages ? ' disabled' : ''}">  
+              <a class="page-link" href="javascript:void(0)" onclick="changePage(${parseInt(params.page) + 1})" id="halaman" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+              </a>
+        </li>
+        
+        </ul>`
+        document.getElementById('pagination').innerHTML = pagination
+      }
+      // console.log(params.page)
+      function changePage(page) {
+        params = { ...params, page }
+        console.log(params)
+        readData()
+        return false
+      }
+
+
+      function sortTableByColumn(table, column, asc = true) {
+        const dirModifier = asc ? 1 : -1;
+        const tBody = table.tBodies[0];
+        const rows = Array.from(tBody.querySelectorAll("tr"));
+
+        // Sort each row
+        const sortedRows = rows.sort((a, b) => {
+          const aColText = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+          const bColText = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+
+          return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
+        });
+
+        // Remove all existing TRs from the table
+        while (tBody.firstChild) {
+          tBody.removeChild(tBody.firstChild);
+        }
+
+        // Re-add the newly sorted rows
+        tBody.append(...sortedRows);
+
+        // Remember how the column is currently sorted
+        table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+        table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
+        table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
+      }
+
+      document.querySelectorAll(".table-sortable th").forEach(headerCell => {
+        headerCell.addEventListener("click", () => {
+          const tableElement = headerCell.parentElement.parentElement.parentElement;
+          const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+          const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+
+          sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+        });
+      });
+
+    </script>
+</body>
+
+</html>
