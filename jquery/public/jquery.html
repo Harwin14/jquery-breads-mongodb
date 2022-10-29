@@ -272,7 +272,6 @@
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
-
               },
               body: JSON.stringify({ string, integer, float, date, boolean })
             }).then((response) => response.json()).then((data) => {
@@ -312,7 +311,6 @@
         }
 
         const editData = (breads) => {
-
           idEdit = breads._id
           document.getElementById('string').value = breads.string
           document.getElementById('integer').value = breads.integer
