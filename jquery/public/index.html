@@ -10,7 +10,7 @@
   <link href="/fontawesome/css/all.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script src="/jquery-3.6.1.min.js"></script>
- 
+
   <title>JQUERY</title>
 </head>
 
@@ -213,19 +213,19 @@
         display: 5,
         page: 1
       }
-     
-      const readData = (params) => {
+
+      const readData = () => {
         $.ajax({
           method: "GET",
-          url: "http://localhost:3000/users?",
-          dataType:"json",
-          data: params   
-          }).done((response) => {
-            let html = ''
-            response.data.forEach((item, index) => {
-              html += `
+          url: "http://localhost:3000/users",
+          dataType: "json",
+          data: params
+        }).done((response) => {
+          let html = ''
+          response.data.forEach((item, index) => {
+            html += `
                         <tr>
-                            <td>${index + 1 }</td>
+                            <td>${index + 1}</td>
                             <td>${item.string}</td>
                             <td>${item.integer}</td>
                             <td>${item.float}</td>
@@ -234,86 +234,94 @@
                             <td>
                                 <div class="d-grid gap-2 d-md-block">
                                     <a class="btn btn-success"><i
-                                            class="fa-solid fa-pencil" title="Edit" onclick='editData(${JSON.stringify(item)})''></i></a>
-                         <a class="btn btn-danger" onclick="removeData('${item._id}') "
+                                            class="fa-solid fa-pencil" btn-edit title="Edit" iddata="${item._id}"></i></a>
+                         <a class="btn btn-danger" btn-delete iddata="${item._id}"
                                         onclick="return confirm('Are you sure you want to delete?');"> <i
                                             class="fa-solid fa-trash-can" title="Delete" ></i>
                                     </a>
                                 </div>
                             </td>
                         </tr>
-                        ` 
-            })
-          $('body-users').html(html)
-            pagination()
-          }).fail(function(err) {
-            alert('gagal pake jquery')
+                        `
           })
-        }
+          $('#body-users').html(html)
+          pagination()
+        }).fail(function (err) {
+          alert('gagal pake jquery')
+        })
+      }
 
 
 
       const saveData = (e) => {
         e.preventDefault()
-        const string = document.getElementById('string').value
-        const integer = document.getElementById('integer').value
-        const float = document.getElementById('float').value
-        const date = document.getElementById('date').value
-        const boolean = document.getElementById('boolean').value
+        const string = $('#string').val()
+        const integer = $('#integer').val()
+        const float = $('#float').val()
+        const date = $('#date').val()
+        const boolean = $('#boolean').val()
         console.log(string, integer, float, date, boolean)
 
         if (idEdit == null) {
-          fetch('http://localhost:3000/users', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
+          $.ajax({
+            method: "POST",
+            url: `http://localhost:3000/users`,
+            dataType: "json",
+            data: { string, integer, float, date, boolean }
 
-            },
-            body: JSON.stringify({ string, integer, float, date, boolean })
-          }).then((response) => response.json()).then((data) => {
+          }).done((response) => {
             readData()
+            $('#body-users').trigger("reset")
+          }).fail((err) => {
+            alert('gagal add data jquery')
           })
+
         } else {
-          fetch(`http://localhost:3000/users/${idEdit}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
+          $.ajax({
+            method: "PUT",
+            url: `http://localhost:3000/users/${idEdit}`,
+            dataType: "json",
+            data: { string, integer, float, date, boolean },
 
-            },
-            body: JSON.stringify({ string, integer, float, date, boolean })
-          }).then((response) => response.json()).then((data) => {
+          }).done((response) => {
             readData()
+            $('#body-users').trigger("reset")
+            idEdit = null;
+          }).fail((err) => {
+            alert('gagal edit data jquery')
           })
-          idEdit = null;
+
         }
-        document.getElementById('string').value = ""
-        document.getElementById('integer').value = ""
-        document.getElementById('float').value = ""
-        document.getElementById('date').value = ""
-        document.getElementById('boolean').value = ""
-        console.log(string, integer, float, date, boolean)
+
+
+        $('#string').val('')
+        $('#integer').val('')
+        $('#float').val('')
+        $('#date').val('')
+        $('#boolean').val('')
+
         return false
       }
       const removeData = (id) => {
-        fetch(`http://localhost:3000/users/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-
-        }).then((response) => response.json()).then((data) => {
+        $.ajax({
+          method: "DELETE",
+          url: `http://localhost:3000/users/${id}`,
+          dataType: "json",
+        }).done((response) => {
           readData()
+        }).fail((err) => {
+          alert('gagal delete data jquery')
         })
       }
 
       const editData = (data) => {
 
         idEdit = data._id
-        document.getElementById('string').value = data.string
-        document.getElementById('integer').value = data.integer
-        document.getElementById('float').value = data.float
-        document.getElementById('date').value = moment(data.date).format("YYYY-MM-DD")
-        document.getElementById('boolean').value = data.boolean
+        $('#string').val(data.string)
+        $('#integer').val(data.integer)
+        $('#float').val(data.float)
+        $('#date').val(moment(data.date).format("YYYY-MM-DD"))
+        $('#boolean').val(data.boolean)
 
 
       }
@@ -337,42 +345,53 @@
         </li>
         
         </ul>`
-        document.getElementById('pagination').innerHTML = pagination
+        $('#pagination').html(pagination)
       }
       // console.log(params.page)
-      function changePage(page) {
-        params = { ...params, page }
-        console.log(params)
-        readData()
-        return false
-      }
+      // function changePage(page) {
+      //   params = { ...params, page }
+      //   console.log(params)
+      //   readData()
+      //   return false
+      // }
 
       function resetData() {
         document.getElementById('form-search').reset()
         readData()
+
       }
 
 
-      document.getElementById('form-search').addEventListener('submit', (event) => {
-        event.preventDefault()
-        const page = 1
-        const string = document.getElementById('searchString').value
-        const integer = document.getElementById('searchInteger').value
-        const float = document.getElementById('searchFloat').value
-        const startDate = document.getElementById('searchStartDate').value
-        const endDate = document.getElementById('searchEndDate').value
-        const boolean = document.getElementById('searchBoolean').value
-        params = { ...params, string, integer, float, startDate, endDate, boolean, page }
+
+      $(document).ready(function () {
+        readData()
+
+        $('#form-search').submit, ((event) => {
+          event.preventDefault()
+          const page = 1
+          const string = $('#searchString').val()
+          const integer = $('#searchInteger').val()
+          const float = $('#searchFloat').val()
+          const startDate = $('#searchStartDate').val()
+          const endDate = $('#searchEndDate').val()
+          const boolean = $('#searchBoolean').val()
+          params = { ...params, string, integer, float, startDate, endDate, boolean, page }
+          readData()
+        }) 
+        $('table tbody').on('click', '.btn-edit', () => {
+          const id = $(this).attr('iddata')
+          editData(id)
+           
+        })
+        $('table tbody').on('click', '.btn-delete', () => {
+          const id = $(this).attr('iddata')
+          removeData(id)
+           
+         })
+ 
+
         readData()
       })
-     
-      $(document).ready(function(){
-
-        
-      })
-      
-
-      readData()
     </script>
 </body>
 
