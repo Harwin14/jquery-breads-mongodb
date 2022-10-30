@@ -40,7 +40,7 @@
 
               <div class="card-body c ">
                 <div>
-                  <form onsubmit="return saveData(event)" class="form">
+                  <form id="form-data" class="form">
 
                     <div class="row mb-3">
                       <label for="string" class="col-sm-2 col-form-check-label ">String</label>
@@ -180,7 +180,7 @@
         <div class="card-header text-center ">
           <h3><strong>RESULT</strong></h3>
         </div>
-        <table class="table table-sortable   table-striped card-body ">
+        <table id="table-data" class="table table-sortable   table-striped card-body ">
           <thead class="thead">
             <tr>
               <th>No</th>
@@ -192,7 +192,7 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="body-table">
+          <tbody>
           </tbody>
         </table>
         <div class="card-footer">
@@ -206,6 +206,27 @@
         </div>
       </div>
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <script>
 
       let idEdit = null;
@@ -213,11 +234,26 @@
         display: 5,
         page: 1
       }
+      $(document).ready(function () {
+        readData()
+        $('#form-data').submit(function (event) {
+          event.preventDefault()
+          saveData()
+        })
+        $('#table-data').on('click', '.btn-delete', function(){
+          const id = $(this).attr('dataid')
+          removeData(id)
+        })
+        $('#table-data').on('click', '.btn-edit', function(){
+          const id = $(this).attr('dataid')
+          editData(id)
+        }) 
 
+      })
       const readData = () => {
         $.ajax({
-          method: "GET",  //huruf kecil or huruf besar tak masalah
-          url: "http://localhost:3000/users",
+          //  method: "GET",  //huruf kecil or huruf besar tak masaleuhh
+          url: "/users",
           dataType: "json", //mastiin yg masuk data jd json
           data: params
         }).done((response) => {
@@ -233,42 +269,42 @@
                             <td>${item.boolean}</td>
                             <td>
                                 <div class="d-grid gap-2 d-md-block">
-                                  <button type="button" class="btn btn-success btn-edit" title="Edit" iddata="${item._id}"><i
+                                  <button type="button" class="btn btn-success btn-edit" title="Edit" dataid="${item._id}"><i
                                     class="fa-solid fa-pencil"></i></button>
-                                  <button type="button" class="btn btn-danger btn-delete" title="Delete" iddata="${item._id}"><i
+                                  <button type="button" class="btn btn-danger btn-delete" title="Delete" dataid="${item._id}"><i
                                     class="fa-solid fa-trash-can" onclick="return confirm('Are you sure you want to delete?');"></i></button>
                                       
                                     </a>
                                 </div>
-                            </td>
+                            </td>  
                         </tr>
                         `
           })
-          $('#body-table').html(html)
+          $('#table-data tbody').html(html)
           pagination()
-        }).fail((err) => { {
-          alert('gagal baca data jquery')
-        }})
+        }).fail((err) => {
+          {
+            alert('gagal baca data jquery')
+          }
+        })
       }
 
 
 
-      const saveData = (e) => {
-        e.preventDefault()
+      const saveData = () => {
         const string = $('#string').val()
         const integer = $('#integer').val()
         const float = $('#float').val()
         const date = $('#date').val()
         const boolean = $('#boolean').val()
-        console.log(string, integer, float, date, boolean)
+
 
         if (idEdit == null) {
           $.ajax({
             method: "POST",
-            url: `http://localhost:3000/users`,
+            url: `/users`,
             dataType: "json",
             data: { string, integer, float, date, boolean }
-
           }).done((response) => {
             readData()
             $('#body-table').trigger("reset")
@@ -278,49 +314,43 @@
         } else {
           $.ajax({
             method: "PUT",
-            url: `http://localhost:3000/users/${idEdit}`,
+            url: `/users/${idEdit}`,
             dataType: "json",
             data: { string, integer, float, date, boolean },
           }).done((response) => {
             readData()
-            $('#body-table').trigger("reset")
-            idEdit = null;
           }).fail((err) => {
             alert('gagal edit data jquery')
           })
+          idEdit = null;
         }
         $('#string').val('')
         $('#integer').val('')
         $('#float').val('')
         $('#date').val('')
         $('#boolean').val('')
-        return false
       }
       const removeData = (id) => {
         $.ajax({
           method: "DELETE",
-          url: `http://localhost:3000/users/${id}`,
+          url: `/users/${id}`,
           dataType: "json",
-        }).done((response) => {
+        }).done((data) => {
           readData()
         }).fail((err) => {
           alert('gagal delete data jquery')
         })
       }
 
-      const editData = (id) => {
-        $.ajax({
-            method: "GET",
-            url: `http://localhost:3000/users/${idEdit}`,
-            dataType: "json"
-        }).done(function(data) {
+      const editData = (data) => {
+        idEdit = data._id
         $('#string').val(data.string)
         $('#integer').val(data.integer)
         $('#float').val(data.float)
         $('#date').val(moment(data.date).format("YYYY-MM-DD"))
         $('#boolean').val(data.boolean)
-      })
-    }
+
+      }
       const pagination = () => {
         let pagination = `<ul class="pagination">
                 <li class="page-item${params.page == 1 ? ' disabled' : ''}">
@@ -371,19 +401,17 @@
           const boolean = $('#searchBoolean').val()
           params = { ...params, string, integer, float, startDate, endDate, boolean, page }
           readData()
-        }) 
-        $('table tbody').on('click', '.btn-edit',function(){
+        })
+        $('table tbody').on('click', '.btn-edit', function () {
           const id = $(this).attr('iddata')
           editData(id)
-           
+
         })
-        $('table body').on('click', '.btn-delete',function(){
+        $('table body').on('click', '.btn-delete', function () {
           const id = $(this).attr('iddata')
           removeData(id)
-           
-         })
- 
 
+        })
         readData()
       })
     </script>

@@ -176,7 +176,7 @@
         <div class="card-header text-center ">
           <h3><strong>RESULT</strong></h3>
         </div>
-        <table class="table table-sortable   table-striped card-body ">
+        <table id="table-data" class="table table-sortable   table-striped card-body ">
           <thead class="thead">
             <tr>
               <th>No</th>
@@ -188,7 +188,7 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="body-users">
+          <tbody>
           </tbody>
         </table>
         <div class="card-footer">
@@ -250,7 +250,7 @@
                         </tr>
                         `
             })
-            $('#user-body').html(html)
+            $('#table-data tbody').html(html)
             pagination()
           }).fail(function (err) {
             alert('error bruh')
