@@ -192,7 +192,7 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="body-users">
+          <tbody id="body-table">
           </tbody>
         </table>
         <div class="card-footer">
@@ -233,22 +233,22 @@
                             <td>${item.boolean}</td>
                             <td>
                                 <div class="d-grid gap-2 d-md-block">
-                                    <a class="btn btn-success"><i
-                                            class="fa-solid fa-pencil" btn-edit title="Edit" iddata="${item._id}"></i></a>
-                         <a class="btn btn-danger" btn-delete iddata="${item._id}"
-                                        onclick="return confirm('Are you sure you want to delete?');"> <i
-                                            class="fa-solid fa-trash-can" title="Delete" ></i>
+                                  <button type='button class="btn btn-success btn-edit" title="Edit" iddata="${item._id}"><i
+                                    class="fa-solid fa-pencil"></i></button>
+                                  <button type='button class="btn btn-danger btn-delete" title="Delete" iddata="${item._id}"><i
+                                    class="fa-solid fa-trash-can" onclick="return confirm('Are you sure you want to delete?');"></i></button>
+                                      
                                     </a>
                                 </div>
                             </td>
                         </tr>
                         `
           })
-          $('#body-users').html(html)
+          $('#body-table').html(html)
           pagination()
-        }).fail(function (err) {
-          alert('gagal pake jquery')
-        })
+        }).fail((err) => { {
+          alert('gagal baca data jquery')
+        }})
       }
 
 
@@ -271,35 +271,29 @@
 
           }).done((response) => {
             readData()
-            $('#body-users').trigger("reset")
+            $('#body-table').trigger("reset")
           }).fail((err) => {
             alert('gagal add data jquery')
           })
-
         } else {
           $.ajax({
             method: "PUT",
             url: `http://localhost:3000/users/${idEdit}`,
             dataType: "json",
             data: { string, integer, float, date, boolean },
-
           }).done((response) => {
             readData()
-            $('#body-users').trigger("reset")
+            $('#body-table').trigger("reset")
             idEdit = null;
           }).fail((err) => {
             alert('gagal edit data jquery')
           })
-
         }
-
-
         $('#string').val('')
         $('#integer').val('')
         $('#float').val('')
         $('#date').val('')
         $('#boolean').val('')
-
         return false
       }
       const removeData = (id) => {
@@ -315,18 +309,13 @@
       }
 
       const editData = (data) => {
-
         idEdit = data._id
         $('#string').val(data.string)
         $('#integer').val(data.integer)
         $('#float').val(data.float)
         $('#date').val(moment(data.date).format("YYYY-MM-DD"))
         $('#boolean').val(data.boolean)
-
-
       }
-
-
       const pagination = () => {
         let pagination = `<ul class="pagination">
                 <li class="page-item${params.page == 1 ? ' disabled' : ''}">
@@ -363,7 +352,7 @@
 
 
 
-      $(document).ready(function () {
+      $(document).ready(() => {
         readData()
 
         $('#form-search').submit, ((event) => {
@@ -378,12 +367,12 @@
           params = { ...params, string, integer, float, startDate, endDate, boolean, page }
           readData()
         }) 
-        $('table tbody').on('click', '.btn-edit', () => {
+        $('table tbody\\\\').on('click', '.btn-edit', () => {
           const id = $(this).attr('iddata')
           editData(id)
            
         })
-        $('table tbody').on('click', '.btn-delete', () => {
+        $('#table-body').on('click', '.btn-delete', () => {
           const id = $(this).attr('iddata')
           removeData(id)
            
