@@ -5,65 +5,46 @@ const { ObjectId } = require('mongodb')
 module.exports = function (db) {
   const collection = db.collection('breads');
 
-  router.get('/', async (req, res) => {
+  router.get('/', async (req, res, next) => {
+      try {
+        //searching
+        const{ string, integer, float, date, boolean} = req.query
+        const params = {}
+        if (string) {
+          params['string'] = new RegExp(string, 'i') 
+        }
+        if (integer) {
+          params['integer'] = integer 
+        }
+        if (float) {
+          params['float'] = float 
+        }
+        if (date) {
+          params['date'] = date 
+        }
+        if (boolean) {
+          params['boolean'] = boolean 
+        }
+        console.log(params)
 
-    const page = req.query.page || 1
-    const limit = 5
-    const values = {}
-   
+        const page = req.query.page || 1
+        const limit = 3
+        const offset = (page - 1) * limit
+        const total = await collection.countDocuments(params)
+        const pages = Math.ceil(total / limit) 
+        const findResult = await collection.find(params).limit(limit).skip(offset).toArray()
+        res.status(200).json({
+          data: findResult,
+          page: parseInt(page),
+          pages: pages,
+          offset
 
-    const offset = limit == 'all' ? 0 : (page - 1) * limit
-
-    if (req.query.string) {
-     values["string"] = new RegExp(`${req.query.string}`, 'i')
-    }
-
-    if (req.query.integer) {
-     values["integer"] = parseInt(req.query.integer)
-    }
-
-    if (req.query.float) {
-     values["float"] = JSON.parse(req.query.float)
-    }
-
-    if (req.query.startDate && req.query.endDate) {
-     values["date"] = {
-        $gte: new Date(`${req.query.startDate}`),
-        $lte: new Date(`${req.query.endDate}`)
+        })
+      } catch (e) {
+        console.log(e)
+        res.json(e)
       }
-    } else if (req.query.startDate) {
-     values["date"] = { $gte: new Date(`${req.query.startDate}`) }
-    } else if (req.query.endDate) {
-     values["date"] = { $lte: new Date(`${req.query.endDate}`) }
-    }
-
-
-    if (req.query.boolean) {
-     values["boolean"] = (req.query.boolean)
-    }
-
-    try {
-
-      const collection = db.collection('breads');
-
-      const totalData = await collection.find(values).count();
-      const totalPages = limit == 'all' ? 1 : Math.ceil(totalData / limit)
-      const limitation = limit == 'all' ? {} : { limit: parseInt(limit), skip: offset }
-      
-      const breads = await collection.find(values, limitation).toArray()
-   //   console.log('values',values)
-
-      res.status(200).json({
-        data: breads,
-        totalData,
-        totalPages,
-        display: limit,
-        page: parseInt(page)
-      })
-    } catch (e) {
-      res.json(e)
-    }
-  });
+    })
   //CREATE
   router.post('/', async function (req, res, next) {
     try {                                              //string: req.body.string, integer: parseInt(req.body.integer), float: JSON.parse(req.body.float), date: new Date(req.body.date), boolean: req.body.boolean

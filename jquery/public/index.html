@@ -37,78 +37,8 @@
 
       <div class="card-body b">
         <table class="table table-striped">
+      
           <tr class="c">
-            <th class="c">
-              <div class="card-header text-center c">
-                <h2>ADD / EDIT Data</h2>
-              </div>
-
-              <div class="card-body c ">
-                <div>
-                  <form id="form-data-search" class="form">
-
-                    <div class="row mb-3">
-                      <label for="string" class="col-sm-2 col-form-check-label ">String</label>
-                      <div class="col-sm-10">
-                        <input type="text" id="s-string" class="form-control" name="string" placeholder="String">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-
-
-                      <label for="integer" class="col-sm-2 col-form-check-label ">Integer</label>
-                      <div class="col-sm-10">
-                        <input type="number" id="s-integer" class="form-control" name="integer" placeholder="Integer">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-
-                      <label for="float" class="col-sm-2 col-form-check-label ">Float</label>
-                      <div class="col-sm-10">
-                        <input type="number" id="s-float" class="form-control" name="float" placeholder="Float"
-                          step="0.005">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-
-                      <label for="date" class="col-sm-2 col-form-check-label ">Date</label>
-                      <div class="col-sm-4">
-                        <input type="date" id="s-date" class="form-control" name="date" placeholder="Date" value='date'
-                          required>
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-
-                      <label for="boolean" class="col-sm-2 col-form-check-label ">boolean</label>
-                      <div class="col-sm-10">
-                        <select id="s-boolean" name="boolean" class="form-select" required>
-                          <option value="" disabled selected>Choose boolean...</option>
-                          <option value=True>True</option>
-                          <option value=False>False</option>
-                        </select>
-                      </div>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-
-                </div>
-                <div class="card-footer ">
-                  <button type="submit" class="btn btn-primary fa-solid fa-file-arrow-down" title="SAVE DATA">
-                    Search</button>
-                  <button class="btn btn-warning" type="submit" onclick="readData()"><i
-                      class="fa-sharp fa-solid fa-rotate-left" title="Reset"> Reset </i></button>
-
-                </div>
-                <br>
-                </form>
-              </div>
-            </th>
-
             <th>
               <div class="card-header text-center c">
                 <h2>
@@ -116,7 +46,7 @@
                 </h2>
               </div>
               <div class="card-body c">
-                <form id="form-search">
+                <form id="form-data-search">
                   <div class="row mb-3">
                     <label for="searchString" class="col-sm-2 col-form-check-label ">String</label>
                     <div class="col-sm-10">
@@ -124,28 +54,21 @@
                         placeholder="String">
                     </div>
                   </div>
-
                   <div class="row mb-3">
-
-
                     <label for="searchInteger" class="col-sm-2 col-form-check-label ">Integer</label>
                     <div class="col-sm-10">
                       <input type="number" class="form-control" id="searchInteger" name="searchInteger"
                         placeholder="Integer">
                     </div>
                   </div>
-
                   <div class="row mb-3">
-
                     <label for="searchFloat" class="col-sm-2 col-form-check-label ">Float</label>
                     <div class="col-sm-10">
                       <input type="number" class="form-control" id="searchFloat" name="searchFloat" placeholder="Float"
                         step="0.005">
                     </div>
                   </div>
-
                   <div class="row mb-3">
-
                     <label for="searchDate" class="col-sm-2 col-form-check-label " id="searchDate">Date</label>
                     <div class="col-sm-4">
                       <input type="date" class="form-control" id="searchStartDate" name="searchStartDate"
@@ -155,9 +78,7 @@
                         placeholder="Date">
                     </div>
                   </div>
-
                   <div class="row mb-3">
-
                     <label for="searchBoolean" class="col-sm-2 col-form-check-label ">boolean</label>
                     <div class="col-sm-10">
                       <select id="searchBoolean" name="searchBoolean" class="form-select">
@@ -200,17 +121,13 @@
           <tbody>
           </tbody>
         </table>
+        <nav id="pagination-view" aria-label="Page navigation ">
+
+        </nav>
         <div class="card-footer">
           <button type="button" class="btn btn-primary" onclick="addData()">
             Add
           </button>
-          <div class="row">
-            <div class="col-md-10">
-              <nav aria-label="Page navigation example" id="pagination">
-              </nav>
-
-            </div>
-          </div>
         </div>
       </div>
       <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -317,15 +234,27 @@
 
     let idEdit = null;
     let params = {
-      display: 5,
       page: 1
     }
+
     $(document).ready(function () {
       readData()
       $('#form-data').submit(function (event) {
         event.preventDefault()
         saveData()
       })
+
+      $('#form-data-search').submit(function (event) {
+        event.preventDefault()
+        const string = $('#string').val()
+        const integer = $('#integer').val()
+        const float = $('#float').val()
+        const date = $('#date').val()
+        const boolean = $('#boolean').val()
+        params = { ...params, string, integer, float, date, boolean, page: 1}
+        readData()
+      })
+
       $('#table-data').on('click', '.btn-delete', function () {
         idDeleted = $(this).attr('dataid')
         $('#modal-delete').modal('show')
@@ -339,6 +268,26 @@
 
       })
     })
+
+    const pagination = (page, pages) => {
+      let html = `<ul class="pagination">
+            <li class="page-item${page == 1 ? ' disabled' : ''}">
+              <a class="page-link" href="javascript:void(0)" onclick="changePage(${page - 1})" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>`
+      for (let i = 1; i <= pages; i++) {
+        html += `<li class="page-item${page == i ? ' active' : ''}"><a class="page-link" href="javascript:void(0)" onclick="changePage(${i})">${i}</a></li> `
+      }
+      html += `<li class="page-item${page == pages ? ' disabled' : ''}">
+              <a class="page-link" href="javascript:void(0)" onclick="changePage(${page + 1})" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>`
+      $('#pagination-view').html(html)
+    }
+
 
     const addData = () => {
       $('#modal-form').modal('show')
@@ -357,12 +306,12 @@
         url: "/users",
         dataType: "json", //mastiin yg masuk data jd json
         data: params
-      }).done((response) => {
+      }).done(({ data, page, pages, offset }) => {
         let html = ''
-        response.data.forEach((item, index) => {
+        data.forEach((item, index) => {
           html += `
                         <tr>
-                            <td>${index + 1}</td>
+                            <td>${index + 1 + offset}</td>
                             <td>${item.string}</td>
                             <td>${item.integer}</td>
                             <td>${item.float}</td>
@@ -382,7 +331,8 @@
                         `
         })
         $('#table-data tbody').html(html)
-        pagination()
+        pagination(page, pages)
+
       }).fail((err) => {
         {
           alert('gagal baca data jquery')
@@ -390,6 +340,10 @@
       })
     }
 
+    const changePage = (page) => {
+      params.page = page
+      readData()
+    }
 
 
     const saveData = () => {
@@ -455,59 +409,24 @@
       $('#modal-form').modal('show')
 
     }
-    const pagination = () => {
-      let pagination = `<ul class="pagination">
-                <li class="page-item${params.page == 1 ? ' disabled' : ''}">
-                  <a class="page-link" id="halaman" href="javascripts:void(0)" onclick="changePage(${parseInt(params.page) - 1})" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>`
-      for (let i = 1; i <= params.totalPages; i++) {
-        pagination += ` 
-        <li class="page-item${i == params.page ? ' active' : ''}"><a class="page-link" id="halaman" href="javascript:void(0)" id="angka" onclick="changePage(${i})">${i}</a></li>`
-      }
-      pagination += `<li class="page-item${params.page == params.totalPages ? ' disabled' : ''}">  
-              <a class="page-link" href="javascript:void(0)" onclick="changePage(${parseInt(params.page) + 1})" id="halaman" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-              </a>
-        </li>
-        
-        </ul>`
-      $('#pagination').html(pagination)
-    }
-    // console.log(params.page)
-    // function changePage(page) {
-    //   params = { ...params, page }
-    //   console.log(params)
-    //   readData()
-    //   return false
-    // }
 
-    function resetData() {
-      document.getElementById('form-search').reset()
+
+
+
+    $('#form-search').submit, ((event) => {
+      event.preventDefault()
+      const page = 1
+      const string = $('#searchString').val()
+      const integer = $('#searchInteger').val()
+      const float = $('#searchFloat').val()
+      const startDate = $('#searchStartDate').val()
+      const endDate = $('#searchEndDate').val()
+      const boolean = $('#searchBoolean').val()
+      params = { ...params, string, integer, float, startDate, endDate, boolean, page }
       readData()
 
-    }
 
 
-
-    $(document).ready(() => {
-      readData()
-
-      $('#form-search').submit, ((event) => {
-        event.preventDefault()
-        const page = 1
-        const string = $('#searchString').val()
-        const integer = $('#searchInteger').val()
-        const float = $('#searchFloat').val()
-        const startDate = $('#searchStartDate').val()
-        const endDate = $('#searchEndDate').val()
-        const boolean = $('#searchBoolean').val()
-        params = { ...params, string, integer, float, startDate, endDate, boolean, page }
-        readData()
-
-
-      })
       readData()
     })
   </script>
