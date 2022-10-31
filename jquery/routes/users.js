@@ -14,14 +14,23 @@ module.exports = function (db) {
           params['string'] = new RegExp(string, 'i') 
         }
         if (integer) {
-          params['integer'] = integer 
+          params['integer'] = parseInt(integer) 
         }
         if (float) {
-          params['float'] = float 
+          params['float'] = JSON.parse(float) 
         }
         if (date) {
           params['date'] = date 
         }
+        // if (req.query.startDate && req.query.endDate) {
+        //   wheres['date'] = { $gte: new Date(`${req.query.startDate}`), $lte: new Date(`${req.query.endDate}`) }
+        // }
+        // else if (req.query.startDate) {
+        //   wheres['date'] = { $gte: new Date(`${req.query.startDate}`) }
+        // }
+        // else if (req.query.endDate) {
+        //   wheres['date'] = { $lte: new Date(`${req.query.endDate}`) }
+        // }
         if (boolean) {
           params['boolean'] = boolean 
         }
