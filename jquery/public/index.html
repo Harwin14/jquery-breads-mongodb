@@ -37,7 +37,7 @@
 
       <div class="card-body b">
         <table class="table table-striped">
-      
+
           <tr class="c">
             <th>
               <div class="card-header text-center c">
@@ -50,32 +50,27 @@
                   <div class="row mb-3">
                     <label for="searchString" class="col-sm-2 col-form-check-label ">String</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="string" name=""
-                        placeholder="String">
+                      <input type="text" class="form-control" id="string" name="" placeholder="String">
                     </div>
                   </div>
                   <div class="row mb-3">
                     <label for="searchInteger" class="col-sm-2 col-form-check-label ">Integer</label>
                     <div class="col-sm-10">
-                      <input type="number" class="form-control" id="integer" name=""
-                        placeholder="Integer">
+                      <input type="number" class="form-control" id="integer" name="" placeholder="Integer">
                     </div>
                   </div>
                   <div class="row mb-3">
                     <label for="searchFloat" class="col-sm-2 col-form-check-label ">Float</label>
                     <div class="col-sm-10">
-                      <input type="number" class="form-control" id="float" name="" placeholder="Float"
-                        step="0.005">
+                      <input type="number" class="form-control" id="float" name="" placeholder="Float" step="0.005">
                     </div>
                   </div>
                   <div class="row mb-3">
                     <label for="searchDate" class="col-sm-2 col-form-check-label " id="date">Date</label>
                     <div class="col-sm-4">
-                      <input type="date" class="form-control" id="startDate" name=""
-                        placeholder="Date">
+                      <input type="date" class="form-control" id="startDate" name="" placeholder="Date">
                       <label class=" col-form-label">to</label>
-                      <input type="date" class="form-control" id="endDate" name=""
-                        placeholder="Date">
+                      <input type="date" class="form-control" id="endDate" name="" placeholder="Date">
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -92,8 +87,8 @@
                   <div class="d-grid gap-2 d-md-block card-footer">
                     <button class="btn btn-primary " type="submit"><i class="fa-solid fa-magnifying-glass"
                         title="Search"> Search</i></button>
-                    <button class="btn btn-warning" onclick="resetData()"><i class="fa-sharp fa-solid fa-rotate-left"
-                        title="Reset"> Reset </i></button>
+                    <button class="btn btn-warning" type="button" onclick="resetSearch()"><i
+                        class="fa-sharp fa-solid fa-rotate-left" title="Reset"> Reset </i></button>
                   </div>
 
                   <br>
@@ -107,16 +102,8 @@
           <h3><strong>RESULT</strong></h3>
         </div>
         <table id="table-data" class="table table-sortable   table-striped card-body ">
-          <thead class="thead">
-            <tr>
-              <th>No</th>
-              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>String</th>
-              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Integer</th>
-              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Float</th>
-              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Date</th>
-              <th><i class="fa-solid fa-arrow-up-short-wide"></i></i>Boolean</th>
-              <th>Actions</th>
-            </tr>
+          <thead class="thead" id="head-table">
+
           </thead>
           <tbody>
           </tbody>
@@ -172,15 +159,15 @@
                 <div class="row mb-3">
 
                   <label for="date" class="col-sm-2 col-form-check-label ">Date</label>
-                  <div class="col-sm-4">
-                    <input type="date" id="date" class="form-control" name="date" placeheq.query.older="Date" value='date'
-                      required>
+                  <div class="col-sm-5">
+                    <input type="date" id="date" class="form-control" name="date" placeheq.query.older="Date"
+                      value='date' required>
                   </div>
                 </div>
 
                 <div class="row mb-3">
 
-                  <label for="boolean" class="col-sm-2 col-form-check-label ">boolean</label>
+                  <label for="boolean" class="col-sm-2 col-form-check-label ">bolean</label>
                   <div class="col-sm-10">
                     <select id="boolean" name="boolean" class="form-select" required>
                       <option value="" disabled selected>Choose boolean...</option>
@@ -234,9 +221,20 @@
 
     let idEdit = null;
     let params = {
-      page: 1
+      page: 1,
+      sortBy: '_id',
+      sortMode: 1
     }
 
+    const resetSearch = () => {
+      $('#form-data-search').trigger('reset')
+      params = {
+        page: 1,
+        sortBy: 'string',
+        sortMode: 1
+      }
+      readData()
+    }
     $(document).ready(function () {
       readData()
       $('#form-data').submit(function (event) {
@@ -252,7 +250,7 @@
         const startDate = $('#startDate').val()
         const endDate = $('#endDate').val()
         const boolean = $('#boolean').val()
-        params = { ...params, string, integer, float, startDate, endDate, boolean, page: 1}
+        params = { ...params, string, integer, float, startDate, endDate, boolean, page: 1 }
         readData()
       })
 
@@ -260,6 +258,12 @@
         idDeleted = $(this).attr('dataid')
         $('#modal-delete').modal('show')
 
+      })
+      $('#head-users').on('click', '.btn', function () {
+        params.sortBy = $(this).attr('sortBy')
+        params.sortMode = $(this).attr('sortMode')
+        console.log('params', params)
+        readData()
       })
 
       $('#btn-deleted').click(function () {
@@ -289,7 +293,6 @@
       $('#pagination-view').html(html)
     }
 
-
     const addData = () => {
       $('#modal-form').modal('show')
       idEdit = null
@@ -309,29 +312,80 @@
         data: params
       }).done(({ data, page, pages, offset }) => {
         let html = ''
+        let htmlhead = ''
+        htmlhead += `<tr>`
+
+        htmlhead += `<th>ID</th>`
+        if (params.sortBy == 'string' && params.sortMode == 1) {
+          htmlhead += `<th><button class="btn" sortby ="string" sortMode = -1>String<i class="fa-solid fa-arrow-up-a-z" style="margin-left:10px;"></i></button></th>`
+        }
+        else if (params.sortBy == 'string' && params.sortMode == -1) {
+          htmlhead += `<th><button class="btn" sortby ="string" sortMode = 1>String<i class="fa-solid fa-arrow-up-z-a" style="margin-left:10px;"></i></button></th>`
+        }
+        else {
+          htmlhead += `<th><button class="btn" sortby ="string" sortMode = 1>String<i class="fa-solid fa-sort" style="margin-left:10px;"></i></button></th>`
+        }
+
+        if (params.sortBy == 'integer' && params.sortMode == 1) {
+          htmlhead += `<th><button class="btn" sortby ="integer" sortMode = -1>Integer<i class="fa-solid fa-arrow-up-1-9" style="margin-left:10px;"></i></button></th>`
+        }
+        else if (params.sortBy == 'integer' && params.sortMode == -1) {
+          htmlhead += `<th><button class="btn" sortby ="integer" sortMode = 1>Integer<i class="fa-solid fa-arrow-up-9-1" style="margin-left:10px;"></i></button></th>`
+        } else {
+          htmlhead += `<th><button class="btn" sortby ="integer" sortMode = 1>Integer<i class="fa-solid fa-sort" style="margin-left:10px;"></i></button></th>`
+        }
+
+        if (params.sortBy == 'float' && params.sortMode == 1) {
+          htmlhead += `<th><button class="btn" sortby ="float" sortMode = -1>Float<i class="fa-solid fa-sort-up" style="margin-left:10px;"></i></button></th>`
+        }
+        else if (params.sortBy == 'float' && params.sortMode == -1) {
+          htmlhead += `<th><button class="btn" sortby ="float" sortMode = 1>Float<i class="fa-solid fa-sort-down" style="margin-left:10px;"></i></button></th>`
+        } else {
+          htmlhead += `<th><button class="btn" sortby ="float" sortMode = 1>Float<i class="fa-solid fa-sort" style="margin-left:10px;"></i></button></th>`
+        }
+
+        if (params.sortBy == 'date' && params.sortMode == 1) {
+          htmlhead += `<th><button class="btn" sortby ="date" sortMode = -1>Date<i class="fa-solid fa-arrow-up-wide-short" style="margin-left:10px;"></i></button></th>`
+        }
+        else if (params.sortBy == 'date' && params.sortMode == -1) {
+          htmlhead += `<th><button class="btn" sortby ="date" sortMode = 1>Date<i class="fa-solid fa-arrow-up-short-wide" style="margin-left:10px;"></i></button></th>`
+        } else {
+          htmlhead += `<th><button class="btn" sortby ="date" sortMode = 1>Date<i class="fa-solid fa-sort" style="margin-left:10px;"></i></button></th>`
+        }
+
+        if (params.sortBy == 'boolean' && params.sortMode == 1) {
+          htmlhead += `<th><button class="btn" sortby ="boolean" sortMode = -1>Boolean<i class="fa-solid fa-xmark" style="margin-left:10px;"></i></button></th>`
+        }
+        else if (params.sortBy == 'boolean' && params.sortMode == -1) {
+          htmlhead += `<th><button class="btn" sortby ="boolean" sortMode = 1>Boolean<i class="fa-solid fa-check" style="margin-left:10px;"></i></button></th>`
+        } else {
+          htmlhead += `<th><button class="btn" sortby ="boolean" sortMode = 1>Boolean<i class="fa-solid fa-sort" style="margin-left:10px;"></i></button></th>`
+        }
+        htmlhead += `<th class="no-sort text-center">Actions</th>`
+        htmlhead += `</tr>`
+        //console.log(htmlhead)
         data.forEach((item, index) => {
           html += `
-                        <tr>
-                            <td>${index + 1 + offset}</td>
-                            <td>${item.string}</td>
-                            <td>${item.integer}</td>
-                            <td>${item.float}</td>
-                            <td>${moment(item.date).format('DD/MMM/YYYY')}</td>
-                            <td>${item.boolean}</td>
-                            <td>
-                                <div class="d-grid gap-2 d-md-block">
-                                  <button type="button" class="btn btn-success btn-edit" title="Edit" onclick='editData(${JSON.stringify(item)})'><i
-                                    class="fa-solid fa-pencil"></i></button>
-                                  <button type="button" class="btn btn-danger btn-delete" title="Delete" dataid="${item._id}"><i
-                                    class="fa-solid fa-trash-can" ></i></button>
-                                      
-                                    </a>
-                                </div>
-                            </td>  
-                        </tr>
-                        `
+        <tr>
+          <td>${index + 1 + offset}</td>
+          <td>${item.string}</td>
+          <td>${item.integer}</td>
+          <td>${item.float}</td>
+          <td>${moment(item.date).format('DD/MMM/YYYY')}</td>
+          <td>${item.boolean}</td>
+          <td>
+          <div class="d-grid gap-2 d-md-block">
+              <button type="button" class="btn btn-success btn-edit" title="Edit" onclick='editData(${JSON.stringify(item)})'><i
+                class="fa-solid fa-pencil"></i></button>
+              <button type="button" class="btn btn-danger btn-delete" title="Delete" dataid="${item._id}"><i
+                class="fa-solid fa-trash-can" ></i></button>
+          </div>
+          </td>  
+        </tr>`
         })
+        $('#head-table').html(htmlhead)
         $('#table-data tbody').html(html)
+
         pagination(page, pages)
 
       }).fail((err) => {
@@ -345,6 +399,8 @@
       params.page = page
       readData()
     }
+
+
 
 
     const saveData = () => {
@@ -410,8 +466,8 @@
       $('#modal-form').modal('show')
 
     }
-      readData()
-    
+    readData()
+
   </script>
 </body>
 

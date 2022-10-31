@@ -10,6 +10,11 @@ module.exports = function (db) {
       //searching
       const { string, integer, float, startDate, endDate, boolean } = req.query
       const params = {}
+
+      var sortBy = req.query.sortBy == undefined ? 'string' : req.query.sortBy;
+      var sortMode = req.query.sortMode == undefined ? 1 : req.query.sortMode;
+      var sortMongo = JSON.parse(`{"${sortBy}" : ${sortMode}}`);
+
       if (string) {
         params['string'] = new RegExp(string, 'i')
       }
@@ -39,7 +44,7 @@ module.exports = function (db) {
       const offset = (page - 1) * limit
       const total = await collection.countDocuments(params)
       const pages = Math.ceil(total / limit)
-      const findResult = await collection.find(params).limit(limit).skip(offset).toArray()
+      const findResult = await collection.find(params).limit(limit).skip(offset).sort(sortMongo).toArray()
       res.status(200).json({
         data: findResult,
         page: parseInt(page),
