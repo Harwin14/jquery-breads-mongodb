@@ -259,7 +259,7 @@
         $('#modal-delete').modal('show')
 
       })
-      $('#head-users').on('click', '.btn', function () {
+      $('#head-table').on('click', '.btn', function () {
         params.sortBy = $(this).attr('sortBy')
         params.sortMode = $(this).attr('sortMode')
         console.log('params', params)
@@ -364,6 +364,7 @@
         htmlhead += `<th class="no-sort text-center">Actions</th>`
         htmlhead += `</tr>`
         //console.log(htmlhead)
+
         data.forEach((item, index) => {
           html += `
         <tr>
