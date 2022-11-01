@@ -37,7 +37,7 @@ module.exports = function (db) {
       if (boolean) {
         params['boolean'] = boolean
       }
-      console.log(params)
+      //console.log(params)
 
       const page = req.query.page || 1
       const limit = 3

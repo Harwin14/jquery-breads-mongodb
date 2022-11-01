@@ -50,33 +50,33 @@
                   <div class="row mb-3">
                     <label for="searchString" class="col-sm-2 col-form-check-label ">String</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="string" name="" placeholder="String">
+                      <input type="text" class="form-control" id="s-string" name="" placeholder="String">
                     </div>
                   </div>
                   <div class="row mb-3">
                     <label for="searchInteger" class="col-sm-2 col-form-check-label ">Integer</label>
                     <div class="col-sm-10">
-                      <input type="number" class="form-control" id="integer" name="" placeholder="Integer">
+                      <input type="number" class="form-control" id="s-integer" name="" placeholder="Integer">
                     </div>
                   </div>
                   <div class="row mb-3">
                     <label for="searchFloat" class="col-sm-2 col-form-check-label ">Float</label>
                     <div class="col-sm-10">
-                      <input type="number" class="form-control" id="float" name="" placeholder="Float" step="0.005">
+                      <input type="number" class="form-control" id="s-float" name="" placeholder="Float" step="0.005">
                     </div>
                   </div>
                   <div class="row mb-3">
-                    <label for="searchDate" class="col-sm-2 col-form-check-label " id="date">Date</label>
+                    <label for="searchDate" class="col-sm-2 col-form-check-label " id="s-date">Date</label>
                     <div class="col-sm-4">
-                      <input type="date" class="form-control" id="startDate" name="" placeholder="Date">
+                      <input type="date" class="form-control" id="s-startDate" name="" placeholder="Date">
                       <label class=" col-form-label">to</label>
-                      <input type="date" class="form-control" id="endDate" name="" placeholder="Date">
+                      <input type="date" class="form-control" id="s-endDate" name="" placeholder="Date">
                     </div>
                   </div>
                   <div class="row mb-3">
                     <label for="boolean" class="col-sm-2 col-form-check-label ">boolean</label>
                     <div class="col-sm-10">
-                      <select id="boolean" name="" class="form-select">
+                      <select id="s-boolean" name="" class="form-select">
                         <option value="" selected> Choose Boolean ... </option>
                         <option value=True>True</option>
                         <option value=False>False</option>
@@ -125,7 +125,7 @@
               <div class="modal-header">
                 <h5 class="modal-title">Form</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                  onclick="$('#modal-form').addDatamodal('hide')">
+                  onclick="$('#modal-form').modal('hide')">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -138,35 +138,26 @@
                     <input type="text" id="string" class="form-control" name="string" placeholder="String">
                   </div>
                 </div>
-
                 <div class="row mb-3">
-
-
                   <label for="integer" class="col-sm-2 col-form-check-label ">Integer</label>
                   <div class="col-sm-10">
                     <input type="number" id="integer" class="form-control" name="integer" placeholder="Integer">
                   </div>
                 </div>
-
                 <div class="row mb-3">
-
                   <label for="float" class="col-sm-2 col-form-check-label ">Float</label>
                   <div class="col-sm-10">
                     <input type="number" id="float" class="form-control" name="float" placeholder="Float" step="0.005">
                   </div>
                 </div>
-
                 <div class="row mb-3">
-
                   <label for="date" class="col-sm-2 col-form-check-label ">Date</label>
                   <div class="col-sm-5">
                     <input type="date" id="date" class="form-control" name="date" placeheq.query.older="Date"
                       value='date' required>
                   </div>
                 </div>
-
                 <div class="row mb-3">
-
                   <label for="boolean" class="col-sm-2 col-form-check-label ">bolean</label>
                   <div class="col-sm-10">
                     <select id="boolean" name="boolean" class="form-select" required>
@@ -184,10 +175,8 @@
                   onclick="$('#modal-form').modal('hide')">Cancel</button>
               </div>
             </div>
-
           </form>
         </div>
-
       </div>
 
     </div>
@@ -220,7 +209,6 @@
   <script>
 
     let idEdit = null;
-    let idDeleted = null;
     let params = {
       page: 1,
       sortBy: '_id',
@@ -245,16 +233,16 @@
 
       $('#form-data-search').submit(function (event) {
         event.preventDefault()
-        const string = $('#string').val()
-        const integer = $('#integer').val()
-        const float = $('#float').val()
-        const startDate = $('#startDate').val()
-        const endDate = $('#endDate').val()
-        const boolean = $('#boolean').val()
+        const string = $('#s-string').val()
+        const integer = $('#s-integer').val()
+        const float = $('#s-float').val()
+        const startDate = $('#s-startDate').val()
+        const endDate = $('#s-endDate').val()
+        const boolean = $('#s-boolean').val()
         params = { ...params, string, integer, float, startDate, endDate, boolean, page: 1 }
         readData()
       })
-
+      //listener
       $('#table-data').on('click', '.btn-delete', function () {
         idDeleted = $(this).attr('dataid')
         $('#modal-delete').modal('show')
@@ -449,13 +437,13 @@
       })
     }
 
-    const editData = (user) => {
-      idEdit = user._id
-      $('#string').val(user.string)
-      $('#integer').val(user.integer)
-      $('#float').val(user.float)
-      $('#date').val(moment(user.date).format("YYYY-MM-DD"))
-      $('#boolean').val(user.boolean)
+    const editData = (data) => {
+      idEdit = data._id
+      $('#string').val(data.string)
+      $('#integer').val(data.integer)
+      $('#float').val(data.float)
+      $('#date').val(moment(data.date).format("YYYY-MM-DD"))
+      $('#boolean').val(data.boolean)
       $('#modal-form').modal('show')
 
     }
