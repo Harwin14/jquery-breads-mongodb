@@ -20,24 +20,20 @@
 </head>
 
 <body class="body">
-  <div class="container sm ">
-    <div class="card h">
-      <div class="h " style="height: 100px;">
-
+  <div class="container">
+    <div class="card">
+      <div class="h" >
         <div class=" text-center ">
           <h1>
             BREADS
           </h1>
-
           <h2>
             (Browse, Read, Edit, Add, Delete, Sort)
           </h2>
         </div>
       </div>
-
       <div class="card-body b">
         <table class="table table-striped">
-
           <tr class="c">
             <th>
               <div class="card-header text-center c">
@@ -101,20 +97,24 @@
         <div class="card-header text-center ">
           <h3><strong>RESULT</strong></h3>
         </div>
-        <table id="table-data" class="table table-sortable table-striped card-body ">
+        <table id="table-data" class="table table-striped card-body  text-center  ">
           <thead class="thead" id="head-table">
 
           </thead>
           <tbody>
           </tbody>
         </table>
-        <nav id="pagination-view" aria-label="Page navigation ">
-
-        </nav>
         <div class="card-footer">
-          <button type="button" class="btn btn-primary fa-regular fa-square-plus" onclick="addData()">
-            Add
-          </button>
+          
+            <button type="button" class="btn btn-primary " title="Add" onclick="addData()"><i
+                class="fa-regular fa-square-plus" title="Add"></i>
+              ADD
+            </button>
+            <div class="p">
+              <nav id="pagination-view" aria-label="Page navigation ">
+              </nav>
+            </div>
+          
         </div>
       </div>
       <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -170,7 +170,7 @@
               </div>
 
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary ">Save</button>
+                <button type="submit" class="btn btn-primary "><i class="fa-solid fa-floppy-disk"></i> Save</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"
                   onclick="$('#modal-form').modal('hide')">Cancel</button>
               </div>
@@ -304,7 +304,7 @@
         let htmlhead = ''
         htmlhead += `<tr>`
 
-        htmlhead += `<th>ID</th>`
+        htmlhead += `<th>No</th>`
         if (params.sortBy == 'string' && params.sortMode == 1) {
           htmlhead += `<th><button class="btn" sortby ="string" sortMode = -1>String<i class="fa-solid fa-arrow-up-a-z" style="margin-left:10px;"></i></button></th>`
         }
@@ -350,7 +350,7 @@
         } else {
           htmlhead += `<th><button class="btn" sortby ="boolean" sortMode = 1>Boolean<i class="fa-solid fa-sort" style="margin-left:10px;"></i></button></th>`
         }
-        htmlhead += `<th class="no-sort text-center">Actions</th>`
+        htmlhead += `<th>Actions</th>`
         htmlhead += `</tr>`
         //console.log(htmlhead)
 
@@ -361,12 +361,11 @@
           <td>${item.string}</td>
           <td>${item.integer}</td>
           <td>${item.float}</td>
-          <td>${moment(item.date).format('DD/MMM/YYYY')}</td>
+          <td>${moment(item.date).format('DD/MMMM/YYYY')}</td>
           <td>${item.boolean}</td>
           <td>
           <div class="d-grid gap-2 d-md-block">
-              <button type="button" class="btn btn-success btn-edit" title="Edit" onclick='editData(${JSON.stringify(item)})'><i
-                class="fa-solid fa-pencil"></i></button>
+              <button type="button" class="btn btn-success btn-edit" title="Edit" onclick='editData(${JSON.stringify(item)})'><i class="fa-solid fa-pencil"></i></button>
               <button type="button" class="btn btn-danger btn-delete" title="Delete" dataid="${item._id}"><i
                 class="fa-solid fa-trash-can" ></i></button>
           </div>

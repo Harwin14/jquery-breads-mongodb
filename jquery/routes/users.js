@@ -11,9 +11,9 @@ module.exports = function (db) {
       const { string, integer, float, startDate, endDate, boolean } = req.query
       const params = {}
 
-      var sortBy = req.query.sortBy == undefined ? 'string' : req.query.sortBy;
-      var sortMode = req.query.sortMode == undefined ? 1 : req.query.sortMode;
-      var sortMongo = JSON.parse(`{"${sortBy}" : ${sortMode}}`);
+      let sortBy = req.query.sortBy == undefined ? 'string' : req.query.sortBy;
+      let sortMode = req.query.sortMode == undefined ? 1 : req.query.sortMode;
+      let sortMongo = JSON.parse(`{"${sortBy}" : ${sortMode}}`);
 
       if (string) {
         params['string'] = new RegExp(string, 'i')

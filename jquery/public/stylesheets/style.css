@@ -6,46 +6,49 @@ body {
 a {
   color: #d32130;
 }
-.h{
-  background-color:#DFF6FF;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding-top: -40px;
+
+.h {
+  background-color: #DFF6FF;
   border-style: outset outset none outset;
   border-radius: 6px;
 }
-.card-header{
- background-color: #47B5FF;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding-top: -40px;
 
+.card-header {
+  background-color: #47B5FF;
   border-radius: 6px;
 }
-  
+
 .b {
-  background-color:#DFF6FF;
+  background-color: #DFF6FF;
   border-radius: 6px;
 
 
 }
+
 .body {
-  background-color:#06283D;
+  background-color: #06283D;
 
 }
-.b { 
+
+.b {
   border-style: outset;
   border-radius: 6px;
 }
+
 .c {
   border-style: outset;
   padding: 0px;
   border-radius: 5px;
 }
-.form {
-  margin-bottom: 13px;
+
+.thead {
+  background-color: #b5c7d1;
+
 }
-.th {
-  background-color: black;
-  border-block-start-color: black;
+
+.p {
+position: relative;
+left: 40%;
+
+top: -41px;
 }
