@@ -211,7 +211,7 @@
     let idEdit = null;
     let params = {
       page: 1,
-      sortBy: '_id',
+      sortBy: 'string',
       sortMode: 1
     }
 
@@ -242,7 +242,7 @@
         params = { ...params, string, integer, float, startDate, endDate, boolean, page: 1 }
         readData()
       })
-      //listener
+      
       $('#table-data').on('click', '.btn-delete', function () {
         idDeleted = $(this).attr('dataid')
         $('#modal-delete').modal('show')
